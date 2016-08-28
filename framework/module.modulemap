@@ -1,0 +1,4 @@
+module core-plot [system] {
+    header "CorePlot-CocoaTouch.h"
+    export *
+}
