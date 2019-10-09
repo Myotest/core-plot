@@ -6,7 +6,6 @@
 #import "PlotGalleryController.h"
 
 #import "dlfcn.h"
-// #define EMBED_NU  1
 
 static const CGFloat CPT_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0;
 
@@ -51,53 +50,31 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
 
 -(void)awakeFromNib
 {
+    [super awakeFromNib];
+
     [[PlotGallery sharedPlotGallery] sortByTitle];
 
     self.splitView.delegate = self;
 
-    [self.imageBrowser setDelegate:self];
-    [self.imageBrowser setDataSource:self];
-    [self.imageBrowser setCellsStyleMask:IKCellsStyleShadowed | IKCellsStyleTitled]; // | IKCellsStyleSubtitled];
+    self.imageBrowser.delegate       = self;
+    self.imageBrowser.dataSource     = self;
+    self.imageBrowser.cellsStyleMask = IKCellsStyleShadowed | IKCellsStyleTitled; // | IKCellsStyleSubtitled;
 
     [self.imageBrowser reloadData];
 
     self.hostingView.delegate = self;
 
     [self setupThemes];
-
-#ifdef EMBED_NU
-    // Setup a Nu console without the help of the Nu include files or
-    // an explicit link of the Nu framework, which may not be installed
-    nuHandle = dlopen("/Library/Frameworks/Nu.framework/Nu", RTLD_LAZY);
-
-    if ( nuHandle ) {
-        NSString *consoleStartup =
-            @"(progn \
-           (load \"console\") \
-           (set $console ((NuConsoleWindowController alloc) init)))";
-
-        Class nuClass = NSClassFromString(@"Nu");
-        id parser     = [nuClass performSelector:@selector(parser)];
-        id code       = [parser performSelector:@selector(parse:) withObject:consoleStartup];
-        [parser performSelector:@selector(eval:) withObject:code];
-    }
-#endif
 }
 
 -(void)dealloc
 {
     [self setPlotItem:nil];
 
-    [splitView setDelegate:nil];
-    [imageBrowser setDataSource:nil];
-    [imageBrowser setDelegate:nil];
-    [hostingView setDelegate:nil];
-
-#ifdef EMBED_NU
-    if ( nuHandle ) {
-        dlclose(nuHandle);
-    }
-#endif
+    splitView.delegate      = nil;
+    imageBrowser.dataSource = nil;
+    imageBrowser.delegate   = nil;
+    hostingView.delegate    = nil;
 }
 
 -(void)setFrameSize:(NSSize)newSize
@@ -190,7 +167,7 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
         NSGraphicsContext *bitmapContext = [NSGraphicsContext graphicsContextWithBitmapImageRep:layerImage];
         CGContextRef context             = (CGContextRef)bitmapContext.graphicsPort;
 
-        CGContextClearRect( context, CGRectMake(0.0, 0.0, boundsSize.width, boundsSize.height) );
+        CGContextClearRect(context, CGRectMake(0.0, 0.0, boundsSize.width, boundsSize.height));
         CGContextSetAllowsAntialiasing(context, true);
         CGContextSetShouldSmoothFonts(context, false);
         [imageView.layer renderInContext:context];
@@ -218,13 +195,13 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
     if ( [pngSavingDialog runModal] == NSOKButton ) {
         NSURL *url = pngSavingDialog.URL;
         if ( url ) {
-            // top image
+// top image
             CGSize topShelfSize = CGSizeMake(1920.0, 720.0);
 
             NSURL *topURL = [NSURL URLWithString:@"PlotGalleryTopShelf.png" relativeToURL:url];
             [self exportTVImageWithSize:topShelfSize toURL:topURL showPlots:YES showBackground:YES];
 
-            // large icon image
+// large icon image
             CGSize largeIconSize = CGSizeMake(1280.0, 768.0);
 
             NSURL *largeBackURL = [NSURL URLWithString:@"PlotGalleryLargeIconBack.png" relativeToURL:url];
@@ -233,7 +210,7 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
             NSURL *largeFrontURL = [NSURL URLWithString:@"PlotGalleryLargeIconFront.png" relativeToURL:url];
             [self exportTVImageWithSize:largeIconSize toURL:largeFrontURL showPlots:YES showBackground:NO];
 
-            // small icon image
+// small icon image
             CGSize smallIconSize = CGSizeMake(400.0, 240.0);
 
             NSURL *smallBackURL = [NSURL URLWithString:@"PlotGallerySmallIconBack.png" relativeToURL:url];
@@ -293,9 +270,9 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
     NSValue *groupRange = [NSValue valueWithRange:NSMakeRange(offset, [[PlotGallery sharedPlotGallery] numberOfRowsInSection:index])];
 
     return @{
-               IKImageBrowserGroupStyleKey: @(IKGroupDisclosureStyle),
-               IKImageBrowserGroupTitleKey: groupTitle,
-               IKImageBrowserGroupRangeKey: groupRange
+        IKImageBrowserGroupStyleKey: @(IKGroupDisclosureStyle),
+        IKImageBrowserGroupTitleKey: groupTitle,
+        IKImageBrowserGroupRangeKey: groupRange
     };
 }
 
@@ -327,7 +304,7 @@ static NSString *const kThemeTableViewControllerDefaultTheme = @"Default";
 
 -(void)splitView:(nonnull NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-    // Lock the LHS width
+// Lock the LHS width
     NSRect frame   = sender.frame;
     NSView *lhs    = sender.subviews[0];
     NSRect lhsRect = lhs.frame;

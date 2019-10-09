@@ -25,8 +25,8 @@
 +(nonnull NSDictionary<NSString *, NSString *> *)attributes
 {
     return @{
-               QCPlugInAttributeNameKey: @"Core Plot Scatter Plot",
-               QCPlugInAttributeDescriptionKey: @"Scatter plot"
+        QCPlugInAttributeNameKey: @"Core Plot Scatter Plot",
+        QCPlugInAttributeDescriptionKey: @"Scatter plot"
     };
 }
 
@@ -197,7 +197,7 @@
         if ( fillColor ) {
             plot.areaFill = [CPTFill fillWithColor:[CPTColor colorWithCGColor:fillColor]];
         }
-        plot.areaBaseValue = @( MAX( self.inputYMin, MIN(self.inputYMax, 0.0) ) );
+        plot.areaBaseValue = @(MAX(self.inputYMin, MIN(self.inputYMax, 0.0)));
 
         [plot reloadData];
     }

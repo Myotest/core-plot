@@ -21,8 +21,7 @@ static PlotGallery *sharedPlotGallery = nil;
 
 +(nonnull PlotGallery *)sharedPlotGallery
 {
-    @synchronized(self)
-    {
+    @synchronized ( self ) {
         if ( sharedPlotGallery == nil ) {
             sharedPlotGallery = [[self alloc] init];
         }
@@ -32,8 +31,7 @@ static PlotGallery *sharedPlotGallery = nil;
 
 +(id)allocWithZone:(NSZone *)zone
 {
-    @synchronized(self)
-    {
+    @synchronized ( self ) {
         if ( sharedPlotGallery == nil ) {
             return [super allocWithZone:zone];
         }
@@ -45,10 +43,9 @@ static PlotGallery *sharedPlotGallery = nil;
 {
     Class thisClass = [self class];
 
-    @synchronized(thisClass)
-    {
+    @synchronized ( thisClass ) {
         if ( sharedPlotGallery == nil ) {
-            if ( (self = [super init]) ) {
+            if ((self = [super init])) {
                 sharedPlotGallery = self;
                 plotItems         = [[NSMutableArray alloc] init];
                 plotSections      = [[NSCountedSet alloc] init];

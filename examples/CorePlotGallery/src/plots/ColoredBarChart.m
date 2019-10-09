@@ -17,7 +17,7 @@
 
 -(nonnull instancetype)init
 {
-    if ( (self = [super init]) ) {
+    if ((self = [super init])) {
         self.title   = @"Colored Bar Chart";
         self.section = kBarPlots;
     }
@@ -131,9 +131,10 @@
     theLegend.textStyle    = whiteTextStyle;
     theLegend.numberOfRows = 1;
 
-    graph.legend             = theLegend;
-    graph.legendAnchor       = CPTRectAnchorTop;
-    graph.legendDisplacement = CGPointMake( 0.0, self.titleSize * CPTFloat(-2.625) );
+    graph.legend              = theLegend;
+    graph.legend.swatchLayout = CPTLegendSwatchLayoutTop;
+    graph.legendAnchor        = CPTRectAnchorTop;
+    graph.legendDisplacement  = CGPointMake(0.0, self.titleSize * CPTFloat(-2.625));
 }
 
 #pragma mark -
@@ -152,7 +153,7 @@
         case CPTBarPlotFieldBarLocation:
             nums = [NSMutableArray arrayWithCapacity:indexRange.length];
             for ( NSUInteger i = indexRange.location; i < NSMaxRange(indexRange); i++ ) {
-                [(NSMutableArray < NSNumber * > *) nums addObject:@(i)];
+                [(NSMutableArray<NSNumber *> *) nums addObject:@(i)];
             }
             break;
 
